@@ -1,0 +1,15 @@
+name: Keep Streamlit App Awake
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Runs every 6 hours to reset the inactivity timer
+  workflow_dispatch: # Allows you to run it manually from the GitHub Actions tab
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping App URL
+        run: |
+          # Replace the URL below with your actual deployed Streamlit Community Cloud URL!
+          curl -I -s "https://your-app-subdomain.streamlit.app/" || true
