@@ -21,7 +21,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files and pre-trained model
-COPY app.py mask_detector.keras runtime.txt ./
+COPY app.py mask_detector.onnx runtime.txt ./
 
 # Expose Streamlit default port
 EXPOSE 8501

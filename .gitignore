@@ -24,3 +24,7 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
+
+# Temporary saved model dir
+saved_model_dir/
+

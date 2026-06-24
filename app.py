@@ -7,7 +7,7 @@ No "No Face Detected" dead ends — always gives a prediction.
 import cv2
 import numpy as np
 import streamlit as st
-import tensorflow as tf
+import onnxruntime as ort
 from PIL import Image
 
 st.set_page_config(
@@ -68,13 +68,13 @@ IMG_SIZE = 224
 @st.cache_resource
 def load_resources():
     print("\n" + "="*50)
-    print("🚀 INITIALIZING FACE MASK DETECTION SYSTEM")
+    print("🚀 INITIALIZING FACE MASK DETECTION SYSTEM (ONNX ENGINE)")
     print("="*50)
-    print("[INFO] Loading MobileNetV2 Model...")
-    mdl = tf.keras.models.load_model("mask_detector.keras")
+    print("[INFO] Loading MobileNetV2 ONNX Model...")
+    mdl = ort.InferenceSession("mask_detector.onnx")
     print("[SUCCESS] Model loaded successfully.")
     print("\n MODEL STATISTICS ")
-    print("  • Architecture:       MobileNetV2 (Transfer Learning)")
+    print("  • Architecture:       MobileNetV2 (ONNX Exported)")
     print("  • Base Model:         Pre-trained on ImageNet")
     print("  • Total Parameters:   ~2.3 Million")
     print("  • Validation Acc:     99.55%")
@@ -167,7 +167,12 @@ def predict_crop(img_rgb, x1, y1, x2, y2):
     """Run model on a cropped region."""
     crop     = Image.fromarray(img_rgb[y1:y2, x1:x2]).resize((IMG_SIZE, IMG_SIZE))
     arr      = np.expand_dims(np.array(crop, dtype=np.float32) / 255.0, axis=0)
-    score    = float(model.predict(arr, verbose=0)[0][0])
+    
+    # Run inference using ONNX
+    input_name = model.get_inputs()[0].name
+    ort_outs   = model.run(None, {input_name: arr})
+    score      = float(ort_outs[0][0][0])
+    
     has_mask = score < 0.5
     conf     = (1.0 - score) if has_mask else score
     label    = "with_mask" if has_mask else "without_mask"

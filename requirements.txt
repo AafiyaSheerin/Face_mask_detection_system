@@ -1,4 +1,4 @@
-tensorflow-cpu
+onnxruntime
 streamlit
 numpy
 Pillow
