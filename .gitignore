@@ -1,0 +1,26 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Python caching
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large dataset directory (not needed for deployment, model is already trained)
+dataset/
+
+# Local/IDE configuration
+.vscode/
+.idea/
+.gemini/
+.git/
+*.log
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
